@@ -2,7 +2,9 @@ package com.snd.fileupload.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
@@ -13,6 +15,8 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "users")
+@AllArgsConstructor
+@NoArgsConstructor
 public class User implements Serializable {
     @Id
     @Size(max = 15)

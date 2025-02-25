@@ -5,6 +5,8 @@ import com.snd.fileupload.dtos.DrugInfoDto;
 import com.snd.fileupload.exceptions.DrugNotFoundException;
 import com.snd.fileupload.models.Drug;
 import com.snd.fileupload.models.Image;
+import com.snd.fileupload.models.User;
+import com.snd.fileupload.models.UserRole;
 import com.snd.fileupload.repositories.DrugRepository;
 import com.snd.fileupload.utils.DrugMapper;
 import org.springframework.data.domain.Page;
@@ -30,6 +32,8 @@ public class DrugController {
     @PostMapping
     public ResponseEntity<DrugInfoDto> addNewDrug(@RequestBody DrugCreationRequest request) {
         Drug drug = DrugMapper.toEntity(request);
+        User user = new User("moaz", UserRole.ADMIN);
+        drug.setCreatedBy(user);
         drug = drugRepository.save(drug);
         return ResponseEntity.ok(DrugMapper.toInfo(drug));
     }

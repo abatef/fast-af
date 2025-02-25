@@ -17,7 +17,7 @@ public class DrugMapper {
         dto.setId(drug.getId());
         dto.setName(drug.getName());
         dto.setDescription(drug.getDescription());
-        dto.setCreatedBy(drug.getCreatedBy().getUsername());
+//        dto.setCreatedBy(drug.getCreatedBy().getUsername());
         dto.setCreateTime(drug.getCreatedAt());
         dto.setUpdateTime(drug.getUpdatedAt());
         dto.setNumberOfImages(drug.getImages().size());

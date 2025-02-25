@@ -1,3 +1,10 @@
+create table users
+(
+    username varchar(15) primary key,
+    role     varchar(6) check ( role in ('ADMIN', 'USER') )
+);
+
+
 create table drugs
 (
     id          serial primary key,
@@ -19,8 +26,3 @@ create table image
     foreign key (created_by) references users(username) on delete cascade
 );
 
-create table users
-(
-    username varchar(15) primary key,
-    role     varchar(6) check ( role in ('ADMIN', 'USER') )
-);

@@ -23,8 +23,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Drug {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "drugs_id_gen")
-    @SequenceGenerator(name = "drugs_id_gen", sequenceName = "drugs_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 

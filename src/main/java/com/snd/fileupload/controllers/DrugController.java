@@ -47,7 +47,7 @@ public class DrugController {
         return ResponseEntity.ok(DrugMapper.toInfo(drug.get()));
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<Drug>> getAllDrugs(@RequestParam("size") int size,
                                                   @RequestParam("page") int page) {
         Pageable request = PageRequest.of(page, size);

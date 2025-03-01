@@ -54,4 +54,9 @@ public class Drug {
     @UpdateTimestamp
     private Instant updatedAt;
 
+    @Size(max = 11)
+    @Column(name = "status", length = 11)
+    @Enumerated(EnumType.STRING)
+    private DrugStatus status;
+
 }

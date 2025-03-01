@@ -3,11 +3,9 @@ package com.snd.fileupload.controllers;
 import com.snd.fileupload.dtos.DrugCreationRequest;
 import com.snd.fileupload.dtos.DrugInfoDto;
 import com.snd.fileupload.exceptions.DrugNotFoundException;
-import com.snd.fileupload.models.Drug;
-import com.snd.fileupload.models.Image;
-import com.snd.fileupload.models.User;
-import com.snd.fileupload.models.UserRole;
+import com.snd.fileupload.models.*;
 import com.snd.fileupload.repositories.DrugRepository;
+import com.snd.fileupload.repositories.ImageRepository;
 import com.snd.fileupload.utils.DrugMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,14 +16,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/drugs")
 public class DrugController {
     private final DrugRepository drugRepository;
+    private final ImageRepository imageRepository;
 
-    public DrugController(DrugRepository drugRepository) {
+    public DrugController(DrugRepository drugRepository, ImageRepository imageRepository) {
         this.drugRepository = drugRepository;
+        this.imageRepository = imageRepository;
     }
 
     @Transactional
@@ -47,21 +48,39 @@ public class DrugController {
         return ResponseEntity.ok(DrugMapper.toInfo(drug.get()));
     }
 
+    @PatchMapping("/status")
+    public ResponseEntity<DrugInfoDto> setDrugStatus(@RequestParam("id") String id,
+                                              @RequestParam("status") DrugStatus status) {
+        Optional<Drug> drugOptional = drugRepository.getDrugById(Integer.parseInt(id));
+        if (drugOptional.isEmpty()) {
+            throw new DrugNotFoundException();
+        }
+        Drug drug = drugOptional.get();
+        drug.setStatus(status);
+        return ResponseEntity.ok(DrugMapper.toInfo(drug));
+    }
+
     @GetMapping
-    public ResponseEntity<List<Drug>> getAllDrugs(@RequestParam("size") int size,
-                                                  @RequestParam("page") int page) {
-        Pageable request = PageRequest.of(page, size);
-        Page<Drug> drugs = drugRepository.findAll(request);
-        if (drugs.isEmpty()) {
+    public ResponseEntity<List<Drug>> getAllDrugs(
+            @RequestParam(value = "size", required = false, defaultValue = "10") String size,
+            @RequestParam(value = "page", required = false, defaultValue = "0") String page,
+            @RequestParam(value = "form", required = false) String form,
+            @RequestParam(value = "status", required = false) DrugStatus status,
+            @RequestParam(value = "user", required = false) String username,
+            @RequestParam(value = "imaged", required = false) Boolean isolate ) {
+        Pageable request = PageRequest.of(Integer.parseInt(page), Integer.parseInt(size));
+        List<Drug> drugsList = drugRepository.filterDrugs(status, form, username, isolate, request).getContent();
+        if (drugsList.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(drugs.getContent());
+        return ResponseEntity.ok(drugsList);
     }
 
     @GetMapping("/no-images")
-    public ResponseEntity<List<Drug>> getNoImageDrugs(@RequestParam("size") int size,
+    public ResponseEntity<List<Drug>> getNoImageDrugs(
+            @RequestParam(value = "size", required = false, defaultValue = "10") String size,
                                                       @RequestParam("page") int page) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, Integer.parseInt(size));
         Page<Drug> drugs = drugRepository.findAllByImagesIsEmpty(pageable);
         if (drugs.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -71,8 +90,11 @@ public class DrugController {
 
     @GetMapping("/images")
     public ResponseEntity<List<Image>> getDrugImages(@RequestParam("drugId") Integer id) {
-        Drug d = drugRepository.getDrugById(id);
-        List<Image> images = d.getImages();
+        Optional<Drug> d = drugRepository.getDrugById(id);
+        if (d.isEmpty()) {
+            throw new DrugNotFoundException();
+        }
+        List<Image> images = d.get().getImages();
         if (images.isEmpty()) {
             return ResponseEntity.noContent().build();
         }

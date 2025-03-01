@@ -2,6 +2,7 @@ package com.snd.fileupload.dtos;
 
 
 import com.snd.fileupload.models.Drug;
+import com.snd.fileupload.models.DrugStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,8 @@ public class DrugInfoDto {
     private String name;
     private String description;
     private Integer numberOfImages;
+    private DrugStatus status;
+    private String createdBy;
     private Instant createTime;
     private Instant updateTime;
-    private String createdBy;
 }

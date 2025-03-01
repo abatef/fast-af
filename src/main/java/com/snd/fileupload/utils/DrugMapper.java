@@ -17,10 +17,11 @@ public class DrugMapper {
         dto.setId(drug.getId());
         dto.setName(drug.getName());
         dto.setDescription(drug.getDescription());
-        dto.setCreatedBy(drug.getCreatedBy() != null ? drug.getCreatedBy().getUsername() : null);
         dto.setCreateTime(drug.getCreatedAt());
         dto.setUpdateTime(drug.getUpdatedAt());
-        dto.setNumberOfImages(drug.getImages() != null ? drug.getImages().size() : null);
+        dto.setStatus(drug.getStatus());
+        dto.setCreatedBy(drug.getCreatedBy() != null ? drug.getCreatedBy().getUsername() : null);
+        dto.setNumberOfImages(drug.getImages() != null ? drug.getImages().size() : 0);
         return dto;
     }
 }

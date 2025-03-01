@@ -11,6 +11,7 @@ create table drugs
     name        varchar(250) not null,
     description text,
     created_by  varchar(20),
+    status varchar(11) check ( status in ('AVAILABLE', 'DISCARDED', 'POSTPONED') ),
     created_at  timestamp default CURRENT_TIMESTAMP,
     updated_at  timestamp default CURRENT_TIMESTAMP,
     constraint fk_created_by foreign key (created_by) references users (username) on delete cascade

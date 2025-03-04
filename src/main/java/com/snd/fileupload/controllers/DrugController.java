@@ -7,6 +7,8 @@ import com.snd.fileupload.models.*;
 import com.snd.fileupload.repositories.DrugRepository;
 import com.snd.fileupload.repositories.ImageRepository;
 import com.snd.fileupload.utils.DrugMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +24,7 @@ import java.util.Optional;
 public class DrugController {
     private final DrugRepository drugRepository;
     private final ImageRepository imageRepository;
-
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     public DrugController(DrugRepository drugRepository, ImageRepository imageRepository) {
         this.drugRepository = drugRepository;
         this.imageRepository = imageRepository;
@@ -31,11 +33,20 @@ public class DrugController {
     @Transactional
     @PostMapping
     public ResponseEntity<DrugInfoDto> addNewDrug(@RequestBody DrugCreationRequest request) {
+        logger.info("DRUG TO ENTITY");
         Drug drug = DrugMapper.toEntity(request);
         User user = new User("moaz", UserRole.ADMIN);
         drug.setCreatedBy(user);
         drug = drugRepository.save(drug);
-        return ResponseEntity.ok(DrugMapper.toInfo(drug));
+        logger.info("DRUG ID: {}", drug.getId());
+        DrugInfoDto dto;
+        try {
+            return ResponseEntity.ok(DrugMapper.toInfo(drug));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        logger.info("NO CONTENT");
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")

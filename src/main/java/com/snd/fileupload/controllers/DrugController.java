@@ -39,14 +39,8 @@ public class DrugController {
         drug.setCreatedBy(user);
         drug = drugRepository.save(drug);
         logger.info("DRUG ID: {}", drug.getId());
-        DrugInfoDto dto;
-        try {
-            return ResponseEntity.ok(DrugMapper.toInfo(drug));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        logger.info("NO CONTENT");
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(DrugMapper.toInfo(drug));
+
     }
 
     @GetMapping("/{id}")

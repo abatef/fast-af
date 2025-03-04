@@ -33,16 +33,18 @@ public interface DrugRepository extends JpaRepository<Drug, Integer> {
 
     @Query("SELECT d FROM Drug d " +
             "WHERE (:status IS NULL OR d.status = :status) " +
+            "AND (:name IS NULL OR d.name LIKE CONCAT(:name, '%')) " +
             "AND (:description IS NULL OR d.description = :description) " +
-            "AND (:username IS NULL OR " +
-            "     (:imaged IS NULL OR " +
+            "AND (:username IS NULL OR :imaged IS NULL OR " +
             "      (:imaged = TRUE AND EXISTS (SELECT i FROM Image i WHERE i.createdBy.username = :username AND i.drug.id = d.id)) " +
-            "   OR (:imaged = FALSE AND NOT EXISTS (SELECT i FROM Image i WHERE i.createdBy.username = :username AND i.drug.id = d.id))))")
+            "   OR (:imaged = FALSE AND NOT EXISTS (SELECT i FROM Image i WHERE i.createdBy.username = :username AND i.drug.id = d.id)))")
     Page<Drug> filterDrugs(@Param("status") DrugStatus status,
+                           @Param("name") String name,
                            @Param("description") String description,
                            @Param("username") String username,
                            @Param("imaged") Boolean imaged,
                            Pageable pageable);
+
 
 
 }

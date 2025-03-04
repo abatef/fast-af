@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/drugs")
@@ -49,9 +48,9 @@ public class DrugController {
     }
 
     @PatchMapping("/status")
-    public ResponseEntity<DrugInfoDto> setDrugStatus(@RequestParam("id") String id,
-                                              @RequestParam("status") DrugStatus status) {
-        Optional<Drug> drugOptional = drugRepository.getDrugById(Integer.parseInt(id));
+    public ResponseEntity<DrugInfoDto> setDrugStatus(@RequestParam("id") Integer id,
+                                                     @RequestParam("status") DrugStatus status) {
+        Optional<Drug> drugOptional = drugRepository.getDrugById(id);
         if (drugOptional.isEmpty()) {
             throw new DrugNotFoundException();
         }
@@ -62,14 +61,15 @@ public class DrugController {
 
     @GetMapping
     public ResponseEntity<List<Drug>> getAllDrugs(
-            @RequestParam(value = "size", required = false, defaultValue = "10") String size,
-            @RequestParam(value = "page", required = false, defaultValue = "0") String page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "form", required = false) String form,
+            @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "status", required = false) DrugStatus status,
             @RequestParam(value = "user", required = false) String username,
-            @RequestParam(value = "imaged", required = false) Boolean isolate ) {
-        Pageable request = PageRequest.of(Integer.parseInt(page), Integer.parseInt(size));
-        List<Drug> drugsList = drugRepository.filterDrugs(status, form, username, isolate, request).getContent();
+            @RequestParam(value = "imaged", required = false) Boolean isolate) {
+        Pageable request = PageRequest.of(page, size);
+        List<Drug> drugsList = drugRepository.filterDrugs(status, name, form, username, isolate, request).getContent();
         if (drugsList.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -78,9 +78,9 @@ public class DrugController {
 
     @GetMapping("/no-images")
     public ResponseEntity<List<Drug>> getNoImageDrugs(
-            @RequestParam(value = "size", required = false, defaultValue = "10") String size,
-                                                      @RequestParam("page") int page) {
-        Pageable pageable = PageRequest.of(page, Integer.parseInt(size));
+            @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
+            @RequestParam(value = "page", required = false, defaultValue = "10") Integer page) {
+        Pageable pageable = PageRequest.of(page, size);
         Page<Drug> drugs = drugRepository.findAllByImagesIsEmpty(pageable);
         if (drugs.isEmpty()) {
             return ResponseEntity.noContent().build();

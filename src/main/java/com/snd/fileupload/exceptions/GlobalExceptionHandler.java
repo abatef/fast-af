@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(value = IllegalArgumentException.class)
-    public void handle() {
-        return;
+    @ExceptionHandler(value = Exception.class)
+    public void handle(Exception e) {
+        e.printStackTrace();
     }
 
 }

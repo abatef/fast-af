@@ -1,6 +1,7 @@
 package com.snd.fileupload.repositories;
 
 import com.snd.fileupload.models.Drug;
+import com.snd.fileupload.models.DrugForm;
 import com.snd.fileupload.models.DrugStatus;
 import com.snd.fileupload.models.Image;
 import jakarta.validation.constraints.Size;
@@ -20,10 +21,6 @@ public interface DrugRepository extends JpaRepository<Drug, Integer> {
     Page<Drug> findAllByImagesIsEmpty(Pageable pageable);
     Optional<Drug> getDrugById(Integer id);
 
-    Page<Drug> findAllByStatusAndDescription(DrugStatus status, String description, Pageable pageable);
-
-    Page<Drug> findAllByStatus(@Size(max = 11) DrugStatus status, Pageable pageable);
-    Page<Drug> findAllByDescription(String description, Pageable pageable);
 
     @Query("SELECT d FROM Drug d WHERE EXISTS (SELECT i FROM Image i WHERE i.createdBy.username = :username AND i.drug.id = d.id)")
     Page<Drug> findDrugsImagedByUser(@Param("username") String username, Pageable pageable);
@@ -34,14 +31,14 @@ public interface DrugRepository extends JpaRepository<Drug, Integer> {
     @Query("SELECT d FROM Drug d " +
             "WHERE (:status IS NULL OR d.status = :status) " +
             "AND (:name IS NULL OR d.name LIKE CONCAT(CAST(:name AS string), '%')) " +
-            "AND (:description IS NULL OR d.description = :description) " +
+            "AND (:form IS NULL OR d.form = :form) " +
             "AND (:username IS NULL OR " +
             "     (:imaged IS NULL OR " +
             "      (:imaged = TRUE AND EXISTS (SELECT i FROM Image i WHERE i.createdBy.username = :username AND i.drug.id = d.id)) " +
             "   OR (:imaged = FALSE AND NOT EXISTS (SELECT i FROM Image i WHERE i.createdBy.username = :username AND i.drug.id = d.id))))")
     Page<Drug> filterDrugs(@Param("status") DrugStatus status,
                            @Param("name") String name,
-                           @Param("description") String description,
+                           @Param("form") DrugForm form,
                            @Param("username") String username,
                            @Param("imaged") Boolean imaged,
                            Pageable pageable);

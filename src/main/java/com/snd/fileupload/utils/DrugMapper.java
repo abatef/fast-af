@@ -8,7 +8,7 @@ public class DrugMapper {
     public static Drug toEntity(DrugCreationRequest request) {
         Drug drug = new Drug();
         drug.setName(request.getName());
-        drug.setDescription(request.getDescription());
+        drug.setForm(request.getForm());
         return drug;
     }
 
@@ -16,7 +16,7 @@ public class DrugMapper {
         DrugInfoDto dto = new DrugInfoDto();
         dto.setId(drug.getId());
         dto.setName(drug.getName());
-        dto.setDescription(drug.getDescription());
+        dto.setForm(drug.getForm());
         dto.setCreateTime(drug.getCreatedAt());
         dto.setUpdateTime(drug.getUpdatedAt());
         dto.setStatus(drug.getStatus());

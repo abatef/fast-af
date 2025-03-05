@@ -32,8 +32,9 @@ public class Drug {
     @Column(name = "name", nullable = false, length = 250)
     private String name;
 
-    @Column(name = "description", length = Integer.MAX_VALUE)
-    private String description;
+    @Column(name = "form", length = Integer.MAX_VALUE)
+    @Enumerated(EnumType.STRING)
+    private DrugForm form;
 
     @JsonIgnore
     @OneToMany(mappedBy = "drug", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

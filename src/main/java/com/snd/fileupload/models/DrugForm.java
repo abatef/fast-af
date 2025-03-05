@@ -1,0 +1,32 @@
+package com.snd.fileupload.models;
+
+public enum DrugForm {
+    GRANULES,
+    LOTION,
+    TABLET,
+    NOSE_DROPS,
+    INJECTION,
+    INFUSION,
+    DRUG_FORM,
+    FILM,
+    OTHER,
+    SPRAY,
+    SYRUP,
+    HAIR_TREATMENT,
+    GARGLE,
+    ORAL_DROP,
+    PAINT,
+    INHALATIONS,
+    CREAM,
+    SACHETS,
+    POWDER,
+    EYE_DROPS,
+    SUPPOSITORIES,
+    PATCH,
+    EAR_DROPS,
+    SOLUTION,
+    EFFERVESCENT,
+    GEL,
+    LOZENGES,
+    CAPSULE;
+}

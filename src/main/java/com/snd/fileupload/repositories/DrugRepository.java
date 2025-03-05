@@ -1,10 +1,7 @@
 package com.snd.fileupload.repositories;
 
 import com.snd.fileupload.models.Drug;
-import com.snd.fileupload.models.DrugForm;
 import com.snd.fileupload.models.DrugStatus;
-import com.snd.fileupload.models.Image;
-import jakarta.validation.constraints.Size;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -38,7 +35,7 @@ public interface DrugRepository extends JpaRepository<Drug, Integer> {
             "   OR (:imaged = FALSE AND NOT EXISTS (SELECT i FROM Image i WHERE i.createdBy.username = :username AND i.drug.id = d.id))))")
     Page<Drug> filterDrugs(@Param("status") DrugStatus status,
                            @Param("name") String name,
-                           @Param("form") DrugForm form,
+                           @Param("form") String form,
                            @Param("username") String username,
                            @Param("imaged") Boolean imaged,
                            Pageable pageable);

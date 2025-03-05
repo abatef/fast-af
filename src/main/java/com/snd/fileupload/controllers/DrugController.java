@@ -68,7 +68,7 @@ public class DrugController {
     public ResponseEntity<List<Drug>> getAllDrugs(
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-            @RequestParam(value = "form", required = false) DrugForm form,
+            @RequestParam(value = "form", required = false) String form,
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "status", required = false) DrugStatus status,
             @RequestParam(value = "user", required = false) String username,

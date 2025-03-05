@@ -1,7 +1,5 @@
 package com.snd.fileupload.dtos;
 
-import com.snd.fileupload.models.Drug;
-import com.snd.fileupload.models.DrugForm;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,5 +9,5 @@ import lombok.NoArgsConstructor;
 @Data
 public class DrugCreationRequest {
     private String name;
-    private DrugForm form;
+    private String form;
 }

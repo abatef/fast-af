@@ -39,9 +39,8 @@ public class ImageController {
 
     @PostMapping("/upload")
     public ResponseEntity<FileUploadResponse> uploadFile(@RequestParam("file") MultipartFile file,
-                                                         @RequestParam("drugID") String drugId,
-                                                         @RequestParam("user") String username) throws IOException {
-        User user = userRepository.getUserByUsername(username);
+                                                         @RequestParam("drugID") String drugId) throws IOException {
+        User user = new User("moaz", UserRole.ADMIN);
         FileUploadResponse fileUploadResponse = storageService.upload(file);
         if (fileUploadResponse.getStatus() == UploadStatus.SUCCESS) {
             Optional<Drug> drugOptional = drugRepository.findById(Integer.parseInt(drugId));

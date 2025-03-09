@@ -27,7 +27,7 @@ public interface DrugRepository extends JpaRepository<Drug, Integer> {
 
     @Query("SELECT d FROM Drug d " +
             "WHERE (:status IS NULL OR d.status = :status) " +
-            "AND (:name IS NULL OR LOWER(CAST(d.name AS string)) LIKE LOWER(CONCAT(:name, '%'))) " +
+            "AND (:name IS NULL OR LOWER(d.name) LIKE LOWER(CONCAT(:name, '%'))) " +
             "AND (:form IS NULL OR d.form = :form) " +
             "AND (:username IS NULL OR " +
             "     (:imaged IS NULL OR " +
@@ -39,6 +39,7 @@ public interface DrugRepository extends JpaRepository<Drug, Integer> {
                            @Param("username") String username,
                            @Param("imaged") Boolean imaged,
                            Pageable pageable);
+
 
 
 

@@ -74,6 +74,9 @@ public class DrugController {
             @RequestParam(value = "user", required = false) String username,
             @RequestParam(value = "imaged", required = false) Boolean isolate) {
         Pageable request = PageRequest.of(page, size);
+        if (name == null) {
+            name = "";
+        }
         List<Drug> drugsList = drugRepository.filterDrugs(status, name, form, username, isolate, request).getContent();
         if (drugsList.isEmpty()) {
             return ResponseEntity.noContent().build();

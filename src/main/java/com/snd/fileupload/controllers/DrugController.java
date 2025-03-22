@@ -61,6 +61,7 @@ public class DrugController {
         }
         Drug drug = drugOptional.get();
         drug.setStatus(status);
+        drugRepository.save(drug);
         return ResponseEntity.ok(DrugMapper.toInfo(drug));
     }
 

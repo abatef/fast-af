@@ -95,15 +95,15 @@ public class DrugController {
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "form", required = false) List<String> forms,
-            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "name", required = false, defaultValue = "") String name,
             @RequestParam(value = "status", required = false) List<DrugStatus> status,
             @RequestParam(value = "user", required = false) String username,
-            @RequestParam(value = "hasImage", required = false) Boolean isolate) {
+            @RequestParam(value = "excludeUser", required = false, defaultValue = "false") Boolean excludeUser,
+            @RequestParam(value = "hasImage", required = false) Boolean imaged) {
         Pageable request = PageRequest.of(page, size);
-        if (name == null) {
-            name = "";
-        }
-        List<Drug> drugsList = drugRepository.filterDrugs(status, false, name, forms, username, isolate, request).getContent();
+        List<Drug> drugsList = drugRepository
+                .filterDrugs(status, false, name, forms, username, imaged, excludeUser, request)
+                .getContent();
         if (drugsList.isEmpty()) {
             return ResponseEntity.noContent().build();
         }

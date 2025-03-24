@@ -39,11 +39,11 @@ public class ImageController {
 
     @PostMapping("/upload")
     public ResponseEntity<FileUploadResponse> uploadFile(@RequestParam("file") MultipartFile file,
-                                                         @RequestParam("drugID") String drugId) throws IOException {
+                                                         @RequestParam("drugID") Integer drugId) throws IOException {
         User user = new User("moaz", UserRole.ADMIN);
         FileUploadResponse fileUploadResponse = storageService.upload(file);
         if (fileUploadResponse.getStatus() == UploadStatus.SUCCESS) {
-            Optional<Drug> drugOptional = drugRepository.findById(Integer.parseInt(drugId));
+            Optional<Drug> drugOptional = drugRepository.findById(drugId);
             if (drugOptional.isEmpty()) {
                 throw new DrugNotFoundException();
             }
@@ -59,8 +59,8 @@ public class ImageController {
     }
 
     @GetMapping
-    public List<String> getAllImages(@RequestParam("id") String drugId) {
-        List<Image> images = imageRepository.findImageByDrug_Id(Integer.parseInt(drugId));
+    public List<String> getAllImages(@RequestParam("id") Integer drugId) {
+        List<Image> images = imageRepository.findAllByDrug_Id(drugId);
         return images.stream().map(Image::getUrl).collect(Collectors.toList());
     }
 }

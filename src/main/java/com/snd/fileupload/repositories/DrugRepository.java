@@ -40,6 +40,23 @@ public interface DrugRepository extends JpaRepository<Drug, Integer> {
                            @Param("imaged") Boolean imaged,
                            Pageable pageable);
 
+    @Query("SELECT d FROM Drug d " +
+            "WHERE (:statuses IS NULL OR " +
+            "       (:useAnd = TRUE AND d.status IN :statuses) OR " +
+            "       (:useAnd = FALSE AND (d.status IN :statuses OR d.status IS NULL))) " +
+            "AND (:name IS NULL OR LOWER(d.name) LIKE LOWER(CONCAT(:name, '%'))) " +
+            "AND (:form IS NULL OR d.form = :form) " +
+            "AND (:imaged IS NULL OR " +
+            "      (:imaged = TRUE AND EXISTS (SELECT i FROM Image i WHERE i.drug.id = d.id)) " +
+            "   OR (:imaged = FALSE AND NOT EXISTS (SELECT i FROM Image i WHERE i.drug.id = d.id))) " +
+            "AND (:username IS NULL OR d.createdBy.username = :username)")
+    Page<Drug> filterDrugs(@Param("statuses") List<DrugStatus> statuses,
+                           @Param("useAnd") boolean useAnd,
+                           @Param("name") String name,
+                           @Param("form") String form,
+                           @Param("username") String username,
+                           @Param("imaged") Boolean imaged,
+                           Pageable pageable);
 
 
 

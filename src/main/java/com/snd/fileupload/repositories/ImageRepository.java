@@ -12,6 +12,7 @@ import java.util.List;
 @Repository
 public interface ImageRepository extends JpaRepository<Image, Integer> {
     List<Image> findImageByDrug_Id(Integer drugId);
+    List<Image> findAllByDrug_Id(Integer drugId);
     List<Image> findImagesByCreatedBy(User user);
     List<Image> findImagesByDrug_IdAndCreatedBy_Username(Integer drugId, String createdByUsername, Pageable pageable);
 

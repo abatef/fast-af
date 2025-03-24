@@ -94,7 +94,7 @@ public class DrugController {
     public ResponseEntity<List<Drug>> getAllDrugs(
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-            @RequestParam(value = "form", required = false) String form,
+            @RequestParam(value = "form", required = false) List<String> forms,
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "status", required = false) List<DrugStatus> status,
             @RequestParam(value = "user", required = false) String username,
@@ -103,7 +103,7 @@ public class DrugController {
         if (name == null) {
             name = "";
         }
-        List<Drug> drugsList = drugRepository.filterDrugs(status, false, name, form, username, isolate, request).getContent();
+        List<Drug> drugsList = drugRepository.filterDrugs(status, false, name, forms, username, isolate, request).getContent();
         if (drugsList.isEmpty()) {
             return ResponseEntity.noContent().build();
         }

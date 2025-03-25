@@ -98,11 +98,10 @@ public class DrugController {
             @RequestParam(value = "name", required = false, defaultValue = "") String name,
             @RequestParam(value = "status", required = false) List<DrugStatus> status,
             @RequestParam(value = "user", required = false) String username,
-            @RequestParam(value = "excludeUser", required = false, defaultValue = "false") Boolean excludeUser,
             @RequestParam(value = "hasImage", required = false) Boolean imaged) {
         Pageable request = PageRequest.of(page, size);
         List<Drug> drugsList = drugRepository
-                .filterDrugs(status, false, name, forms, username, imaged, excludeUser, request)
+                .filterDrugs(status, false, name, forms, username, imaged, request)
                 .getContent();
         if (drugsList.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -110,18 +109,18 @@ public class DrugController {
         return ResponseEntity.ok(drugsList);
     }
 
-    @GetMapping("/no-images")
+    @GetMapping("/not-imaged")
     public ResponseEntity<List<Drug>> getNoImageDrugs(
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
-            @RequestParam(value = "page", required = false, defaultValue = "10") Integer page) {
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "username") String username) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Drug> drugs = drugRepository.findAllByImagesIsEmpty(pageable);
+        Page<Drug> drugs = drugRepository.notImagedByUser(username, pageable);
         if (drugs.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(drugs.getContent());
     }
-
     @GetMapping("/images")
     public ResponseEntity<List<ImageDTO>> getDrugImages(@RequestParam("drugId") Integer id) {
         Optional<Drug> d = drugRepository.getDrugById(id);
@@ -134,5 +133,4 @@ public class DrugController {
         }
         return ResponseEntity.ok(images);
     }
-
 }

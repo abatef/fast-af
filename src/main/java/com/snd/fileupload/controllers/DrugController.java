@@ -113,9 +113,10 @@ public class DrugController {
     public ResponseEntity<List<Drug>> getNoImageDrugs(
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "username") String username) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Drug> drugs = drugRepository.notImagedByUser(username, pageable);
+        Page<Drug> drugs = drugRepository.notImagedByUserAndFilterByName(username, name.toLowerCase(), pageable);
         if (drugs.isEmpty()) {
             return ResponseEntity.noContent().build();
         }

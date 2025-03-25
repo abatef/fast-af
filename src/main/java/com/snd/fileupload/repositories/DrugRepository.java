@@ -64,5 +64,14 @@ public interface DrugRepository extends JpaRepository<Drug, Integer> {
     Page<Drug> notImagedByUser(@Param("username") String username, Pageable pageable);
 
 
+    @Query("SELECT d FROM Drug d " +
+            "LEFT JOIN FETCH d.images i " +
+            "WHERE NOT EXISTS (SELECT 1 FROM Image i WHERE i.drug = d AND i.createdBy.username = :username) " +
+            "AND (:namePrefix IS NULL OR LOWER(d.name) LIKE LOWER(CONCAT(:namePrefix, '%')))")
+    Page<Drug> notImagedByUserAndFilterByName(
+            @Param("username") String username,
+            @Param("namePrefix") String namePrefix,
+            Pageable pageable);
+
 
 }

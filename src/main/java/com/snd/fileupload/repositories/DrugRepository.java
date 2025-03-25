@@ -68,7 +68,7 @@ public interface DrugRepository extends JpaRepository<Drug, Integer> {
             "AND (:imaged IS NULL OR " +
             "      (:imaged = TRUE AND EXISTS (SELECT i FROM Image i WHERE i.drug.id = d.id)) " +
             "   OR (:imaged = FALSE AND NOT EXISTS (SELECT i FROM Image i WHERE i.drug.id = d.id))) " +
-            "AND (:username IS NULL OR d.createdBy.username = :username) " +
+            "AND (:username IS NULL OR EXISTS ( SELECT i from Image i where i.drug = d and i.createdBy.username = :username)) " +
             "AND (:excludeUser = FALSE OR NOT EXISTS (" +
             "        SELECT i FROM Image i WHERE i.drug = d AND i.createdBy.username = :username" +
             "))")
@@ -80,5 +80,6 @@ public interface DrugRepository extends JpaRepository<Drug, Integer> {
                            @Param("imaged") Boolean imaged,
                            @Param("excludeUser") boolean excludeUser,
                            Pageable pageable);
+
 
 }
